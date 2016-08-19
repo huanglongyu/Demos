@@ -1,0 +1,1 @@
+android dump gfxinfo
