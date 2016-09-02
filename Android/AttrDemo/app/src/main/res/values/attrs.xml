@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NaviBar">
+        <attr name="leftText" format="string" />
+        <attr name="leftImage" format="reference" />
+        <attr name="rightImage" format="reference" />
+        <attr name="leftTextMarginLeft" format="dimension" />
+        <attr name="leftTextSize" format="dimension" />
+        <attr name="leftTextColor" format="color" />
+
+        <attr name="flagTest">
+            <flag name="flag0" value="1" />
+            <flag name="flag1" value="2" />
+        </attr>
+
+        <attr name="enumTest">
+            <enum name="enum0" value="0" />
+            <enum name="enum1" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

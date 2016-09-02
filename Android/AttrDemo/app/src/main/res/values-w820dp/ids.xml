@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="navibar_left_img" />
+    <item type="id" name="navibar_left_tv" />
+    <item type="id" name="navibar_right_img" />
+</resources>
