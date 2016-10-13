@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CameraDemo</string>
+    <string name="has_no_camere">Camere is not available</string>
+</resources>
