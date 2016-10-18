@@ -2,6 +2,7 @@ package com.example.hly.camerademo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
     private CameraBase action;
     private View mCaptureView;
     private View mBack;
+    private FrameLayout previewLayout;
+    private boolean hasCameraPermisson = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +32,32 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
     @Override
     protected void onResume() {
         super.onResume();
-        action.doPreView();
+        //to adpter some ROM has permisson request
+        if (hasCameraPermisson) {
+            action.doPreView();
+        } else {
+            previewLayout.removeAllViews();
+            previewLayout.setBackgroundDrawable(new ColorDrawable(0xFFFF));
+            ((TextView) findViewById(R.id.capture_tips)).setText("Have no permisson");
+        }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        action.doPaused();
+        if (hasCameraPermisson) {
+            action.doPaused();
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        action.doReleaseCamera();
+        if (hasCameraPermisson) {
+            action.doReleaseCamera();
+        }
     }
 
     private void initViews() {
@@ -62,8 +78,14 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
         }
 
         action.setActionCallback(this);
-        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.preview_layout);
-        frameLayout.addView(action.getPreView());
+        previewLayout = (FrameLayout) findViewById(R.id.preview_layout);
+        View v = action.getPreView();
+        if (v != null) {
+            hasCameraPermisson = true;
+            previewLayout.addView(v);
+        } else {
+            hasCameraPermisson = false;
+        }
     }
 
     private void capture(int type, String name) {

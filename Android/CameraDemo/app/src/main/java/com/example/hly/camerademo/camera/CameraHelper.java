@@ -49,6 +49,12 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
         mContext = c;
         mCamera = getCameraInstance();
 
+        //to adpter some ROM
+        //if not get the permission, action will be null
+        if (mCamera == null) {
+            return;
+        }
+
         mCapture = new Capture();
 
         mPreview = new CameraPreview(c);
@@ -76,7 +82,12 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
 
     @Override
     protected void setActionCallback(ICaptureCallback c) {
-        mCapture.setCaptureCallback(c);
+        if (mCapture != null) {
+            mCapture.setCaptureCallback(c);
+        } else {
+            Log.i(TAG, "have no permisson to access Camera");
+        }
+
     }
 
     @Override
