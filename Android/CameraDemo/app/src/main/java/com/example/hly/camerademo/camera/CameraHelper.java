@@ -39,9 +39,7 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
            if (success) {
                mCamera.setOneShotPreviewCallback(null);
                mHandler.sendEmptyMessageDelayed(CHECK,INTERVAL_TIME);
-               Log.i(TAG, "focus success");
            } else {
-               Log.i(TAG, "focus faild");
                mHandler.sendEmptyMessageDelayed(FAILD,INTERVAL_TIME);
            }
         }

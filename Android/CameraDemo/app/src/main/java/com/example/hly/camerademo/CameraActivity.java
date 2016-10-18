@@ -6,18 +6,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.hly.camerademo.camera.CameraHelper;
 import com.example.hly.camerademo.camera.Capture;
-import com.example.hly.camerademo.camera2.Camera2Helper;
 
 public class CameraActivity extends Activity implements View.OnClickListener, ICaptureCallback {
     private static final String TAG = MainActivity.TAG;
     private CameraBase action;
-    private TextView mTextView;
+    private View mCaptureView;
+    private View mBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +45,15 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
     }
 
     private void initViews() {
-        mTextView = (TextView) findViewById(R.id.capture);
-        mTextView.setOnClickListener(this);
+        mCaptureView = findViewById(R.id.capture);
+        mCaptureView.setOnClickListener(this);
+
+        mBack = findViewById(R.id.back);
+        mBack.setOnClickListener(this);
 
         String tips = getIntent().getStringExtra(ICaptureCallback.CAPTURE_TIPS);
         TextView tv = (TextView) findViewById(R.id.capture_tips);
-        tv.setText(tips);
+//        tv.setText(tips);
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             action = new CameraHelper(this);
@@ -93,7 +95,10 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
         switch (v.getId()) {
             case R.id.capture:
                 capture(Capture.ID_TYPE, "ID_Card");
-                mTextView.setClickable(false);
+                mCaptureView.setClickable(false);
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

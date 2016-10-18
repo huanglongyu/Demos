@@ -1,54 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:background="@color/caputre_bg"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.hly.camerademo.MainActivity">
 
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/preview_layout">
-        </FrameLayout>
 
-        <TextView
-            android:id="@+id/capture_tips"
-            android:textSize="20sp"
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/back"
+        android:layout_marginTop="5dp"
+        android:text="返回"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:background="@drawable/capture_bt_bg"
+        android:layout_width="65dp"
+        android:layout_height="22dp" />
+
+    <FrameLayout
+        android:layout_centerInParent="true"
+        android:layout_width="480dp"
+        android:layout_height="270dp"
+        android:id="@+id/preview_layout">
     </FrameLayout>
 
-
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/capture"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:background="@drawable/capture_bt_bg"
-        android:layout_gravity="center">
-        <TextView
-            android:id="@+id/capture"
-            android:ems="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:text="拍照" />
-    </LinearLayout>
+        android:background="@drawable/ic_camera_alt_black_24dp"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/capture_tips"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp"
+        android:text="请注意拍照朝向，尽量保证显示正向方便预览"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
