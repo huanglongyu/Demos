@@ -1,9 +1,12 @@
-package com.example.hly.camerademo.camera;
+package com.example.hly.camerademo;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.example.hly.camerademo.camera.IPreviewCallback;
 
 /**
  * Created by hly on 10/11/16.
@@ -31,6 +34,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+    }
+
+    public Surface getSurface() {
+        return mHolder.getSurface();
     }
 
     @Override

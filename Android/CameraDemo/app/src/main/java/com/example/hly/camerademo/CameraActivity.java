@@ -2,6 +2,7 @@ package com.example.hly.camerademo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.hly.camerademo.camera.CameraHelper;
 import com.example.hly.camerademo.camera.Capture;
+import com.example.hly.camerademo.camera2.Camera2Helper;
 
 public class CameraActivity extends Activity implements View.OnClickListener, ICaptureCallback {
     private static final String TAG = MainActivity.TAG;
@@ -51,7 +53,12 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
         TextView tv = (TextView) findViewById(R.id.capture_tips);
         tv.setText(tips);
 
-        action = new CameraHelper(this);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            action = new CameraHelper(this);
+        } else {
+            action = new CameraHelper(this);
+        }
+
         action.setActionCallback(this);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.preview_layout);
         frameLayout.addView(action.getPreView());

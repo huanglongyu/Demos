@@ -17,10 +17,10 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <com.example.hly.camerademo.camera.CameraPreview
-            android:id="@+id/preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <!--<com.example.hly.camerademo.CameraPreview-->
+            <!--android:id="@+id/preview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
     </FrameLayout>
 
     <Button
