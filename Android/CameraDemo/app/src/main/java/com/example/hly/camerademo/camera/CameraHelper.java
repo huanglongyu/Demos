@@ -4,6 +4,10 @@ import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.PorterDuff;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -29,19 +33,29 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
     private CameraPreview mPreview;
     private SurfaceHolder mSurfaceHolder;
     private Handler mHandler;
-    private static final int FAILD = 1;
+    private SensorManager sm;
+    private static final int RE_TRY = 1;
     private static final int CHECK = 2;
-    private static final int INTERVAL_TIME = 2000;
+    private static final int INTERVAL_TIME = 1500;
+    private float mLastX, mLastY, mLastZ;
+    private boolean mFoucsed = false, sensorOnce = false, registed = false;
+
 
     private Camera.AutoFocusCallback mAutoFocusCallback = new Camera.AutoFocusCallback() {
         @Override
         public void onAutoFocus(boolean success, Camera camera) {
-           if (success) {
-               mCamera.setOneShotPreviewCallback(null);
-               mHandler.sendEmptyMessageDelayed(CHECK,INTERVAL_TIME);
-           } else {
-               mHandler.sendEmptyMessageDelayed(FAILD,INTERVAL_TIME);
-           }
+            if (success) {
+                Log.i(TAG, "focus success");
+                mFoucsed = true;
+                sensorOnce = false;
+                mCamera.setOneShotPreviewCallback(null);
+            } else {
+                Log.i(TAG, "focus failed");
+                mFoucsed = false;
+                sensorOnce = true;
+                mHandler.sendEmptyMessageDelayed(RE_TRY,INTERVAL_TIME);
+            }
+
         }
     };
 
@@ -55,6 +69,8 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             return;
         }
 
+        sm = (SensorManager)c.getSystemService(Context.SENSOR_SERVICE);
+
         mCapture = new Capture();
 
         mPreview = new CameraPreview(c);
@@ -62,13 +78,43 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
         mHandler = new Handler(this);
     }
 
+    SensorEventListener myAccelerometerListener = new SensorEventListener(){
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+            float deltaX  = Math.abs(mLastX - x);
+            float deltaY = Math.abs(mLastY - y);
+            float deltaZ = Math.abs(mLastZ - z);
+
+            if (!mFoucsed && !sensorOnce) {
+                sensorOnce = true;
+                Log.i(TAG, "start to focus");
+                mCamera.autoFocus(mAutoFocusCallback);
+                Log.i(TAG, "start to focus end");
+            }
+
+            if ((deltaX > .5 || deltaY > .5 || deltaZ > .5) && mFoucsed) {
+                Log.i(TAG, "moved the camere");
+                mFoucsed = false;
+                sensorOnce = false;
+            }
+            mLastX = x;
+            mLastY = y;
+            mLastZ = z;
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
+
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
-            case FAILD:
-                mCamera.autoFocus(mAutoFocusCallback);
-                break;
-            case CHECK:
+            case RE_TRY:
                 mCamera.autoFocus(mAutoFocusCallback);
                 break;
         }
@@ -96,6 +142,15 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             Log.i(TAG, "doCapture return");
             return;
         }
+        //in case of call autoFocus repeatly
+        if (registed) {
+            sm.unregisterListener(myAccelerometerListener);
+            registed = false;
+        }
+        mHandler.removeMessages(RE_TRY);
+
+
+        mCamera.cancelAutoFocus();
         mCamera.takePicture(null, null, mCapture);
     }
 
@@ -110,7 +165,11 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             mCamera.setPreviewDisplay(mSurfaceHolder);
             mCamera.setDisplayOrientation(0);
             mCamera.startPreview();
-            mCamera.autoFocus(mAutoFocusCallback);
+            if (!registed) {
+                registed = true;
+                sm.registerListener(myAccelerometerListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+            }
+//            mCamera.autoFocus(mAutoFocusCallback);
         } catch (IOException e) {
             Log.e(TAG, "doPreView error: " + e.getMessage());
         }
@@ -126,6 +185,10 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             Log.i(TAG, "doPaused");
             mCamera.cancelAutoFocus();
             mCamera.stopPreview();
+            if (registed) {
+                sm.unregisterListener(myAccelerometerListener);
+                registed = false;
+            }
         } catch (Exception e) {
             Log.e(TAG, "doPaused error: " + e.getMessage());
         }
@@ -134,7 +197,7 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
     @Override
     protected void doReleaseCamera() {
         mHandler.removeMessages(CHECK);
-        mHandler.removeMessages(FAILD);
+        mHandler.removeMessages(RE_TRY);
         releaseCamera();
     }
 
