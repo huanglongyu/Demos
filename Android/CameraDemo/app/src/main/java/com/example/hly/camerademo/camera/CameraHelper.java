@@ -250,7 +250,7 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             c = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK); // attempt to get a Camera instance
 
             Camera.Parameters params = c.getParameters();
-            List<Camera.Size> previewSizes = params.getSupportedPreviewSizes();
+            List<Camera.Size> previewSizes = params.getSupportedPictureSizes();
             int picWidth = -1, picHeight = -1;
             int screen[] = getScreen(mContext);
             if (screen == null) {
@@ -261,7 +261,7 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
             Log.i(TAG, "getScreen:" + screen[0] + " " + screen[1]);
             for (int i = 0; i < previewSizes.size(); i++) {
                 Camera.Size size = previewSizes.get(i);
-//                Log.i(TAG, "SupportedPreviewSizes:" + size.width + " " + size.height);
+//                Log.i(TAG, "getSupportedPictureSizes:" + size.width + " " + size.height);
                 if (screen[0] == size.height && screen[1] == size.width) {
                     picWidth = size.width;
                     picHeight = size.height;
@@ -287,11 +287,11 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
 //                params.setWhiteBalance(params.WHITE_BALANCE_AUTO);
 //            }
 //
-//            //Flash
+            //Flash
 //            List<String> flashModes = params.getSupportedFlashModes();
 //
 //            if (flashModes
-//                    .contains(android.hardware.Camera.Parameters.FLASH_MODE_AUTO)) {
+//                    .contains(Camera.Parameters.FLASH_MODE_AUTO)) {
 //                Log.i(TAG, "set FLASH_MODE_AUTO");
 //                params.setFlashMode(params.FLASH_MODE_AUTO);
 //            }
