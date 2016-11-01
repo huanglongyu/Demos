@@ -42,16 +42,22 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mIPreviewCallback.surfaceCreated(holder);
+        if (mIPreviewCallback != null) {
+            mIPreviewCallback.surfaceCreated(holder);
+        }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        mIPreviewCallback.surfaceChanged(holder, format, width, height);
+        if (mIPreviewCallback != null) {
+            mIPreviewCallback.surfaceChanged(holder, format, width, height);
+        }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        mIPreviewCallback.surfaceDestroyed(holder);
+        if (mIPreviewCallback != null) {
+            mIPreviewCallback.surfaceDestroyed(holder);
+        }
     }
 }

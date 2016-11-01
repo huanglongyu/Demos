@@ -40,7 +40,6 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
             previewLayout.setBackgroundDrawable(new ColorDrawable(0xFFFF));
             ((TextView) findViewById(R.id.capture_tips)).setText("Have no permisson");
         }
-
     }
 
     @Override
@@ -49,7 +48,6 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
         if (hasCameraPermisson) {
             action.doPaused();
         }
-
     }
 
     @Override
@@ -85,6 +83,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
             previewLayout.addView(v);
         } else {
             hasCameraPermisson = false;
+            mCaptureView.setClickable(false);
         }
     }
 
