@@ -1,6 +1,8 @@
 package com.example.hly.notificationdemo;
 
 import android.content.Context;
+import android.os.Build;
+import android.widget.Toast;
 
 /**
  * Created by hly on 11/28/16.
@@ -13,6 +15,12 @@ public class ProcessNotification extends BaseNotification implements MainActivit
 
     @Override
     public void showNotification() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            Toast.makeText(mContext, "ur device is not support default process style, need use" +
+                    "custom view intead, so return", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         builder.setTicker("ProcessNotification");
         builder.setContentTitle("ProcessNotification");
         builder.setContentText("ProcessNotificationProcessNotificationProcessNotification");
