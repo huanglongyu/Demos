@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.custom).setOnClickListener(this);
         findViewById(R.id.task_stack).setOnClickListener(this);
         findViewById(R.id.process).setOnClickListener(this);
+        findViewById(R.id.hands_up).setOnClickListener(this);
     }
 
     @Override
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.process:
                 mNotificationCompatImpl = new ProcessNotification(MainActivity.this);
+                break;
+            case R.id.hands_up:
+                mNotificationCompatImpl = new FloatNotification(MainActivity.this);
                 break;
             case R.id.message:
                 mNotificationCompatImpl = new MessagingNotification(MainActivity.this);

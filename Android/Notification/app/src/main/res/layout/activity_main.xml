@@ -58,4 +58,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="process notification" />
+
+    <Button
+        android:id="@+id/hands_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="float notification" />
 </LinearLayout>
