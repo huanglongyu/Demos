@@ -29,6 +29,9 @@ public class FloatNotification extends BaseNotification implements MainActivity.
         //must set vibrate or ringtong with high/max priority
         builder.setVibrate(new long[0]);
         builder.setPriority(Notification.PRIORITY_HIGH);
+        //or set full screen intent
+        //builder.setFullScreenIntent(pendingIntentA, true);
+
 
         Intent intentA = new Intent(mContext, ActivityA.class);
         PendingIntent pendingIntentA = PendingIntent.getActivity(mContext, 0, intentA,
@@ -37,6 +40,8 @@ public class FloatNotification extends BaseNotification implements MainActivity.
         Intent intentB = new Intent(mContext, ActivityB.class);
         PendingIntent pendingIntentB = PendingIntent.getActivity(mContext, 0, intentB,
                 PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
         builder.addAction(R.mipmap.ic_launcher, "ActivityA", pendingIntentA);
         builder.addAction(R.mipmap.ic_launcher, "ActivityB", pendingIntentB);

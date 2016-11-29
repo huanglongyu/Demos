@@ -16,8 +16,8 @@ public class PicNotification extends BaseNotification implements MainActivity.No
     @Override
     public void showNotification() {
         builder.setTicker("PicNotification");
-        builder.setContentTitle("PicNotification");
-        builder.setContentText("PicNotificationPicNotificationPicNotification");
+        builder.setContentTitle("ContentTitle");
+        builder.setContentText("ContentText");
         builder.setStyle(new NotificationCompat.BigPictureStyle()
                         .setBigContentTitle("BigContentTitle")
                         .setSummaryText("SummaryText")

@@ -26,10 +26,13 @@ public class BigTextNotification extends BaseNotification implements MainActivit
                 "BigTextNotificationBigTextNotificationBigTextNotificationBigTextNotificationBigTextNotificationBigTextNotification" +
                 "BigTextNotificationBigTextNotificationBigTextNotificationBigTextNotificationBigTextNotificationBigTextNotification" +
                 "12312312312";
-        builder.setTicker("BigTextNotification");
-        builder.setContentTitle("BigTextNotification");
+        builder.setTicker("Ticker");
+        builder.setContentTitle("ContentTitle");
         builder.setContentText(content);
-        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(content));
+        builder.setStyle(new NotificationCompat.BigTextStyle()
+                .bigText(content)
+                .setSummaryText("Summary")
+                .setBigContentTitle("BigContentTitle"));
 
         manager.notify((int)System.currentTimeMillis(), getNotification());
     }

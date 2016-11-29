@@ -15,8 +15,8 @@ public class InBoxNotification extends BaseNotification implements MainActivity.
     @Override
     public void showNotification() {
         builder.setTicker("InBoxNotification");
-        builder.setContentTitle("InBoxNotification");
-        builder.setContentText("InBoxNotificationInBoxNotification");
+        builder.setContentTitle("ContentTitle");
+        builder.setContentText("ContentText");
         builder.setStyle(new NotificationCompat.InboxStyle()
                 .setBigContentTitle("BigContentTitle")
                 .setSummaryText("summartText")

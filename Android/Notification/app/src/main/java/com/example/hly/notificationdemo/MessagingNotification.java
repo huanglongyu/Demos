@@ -22,7 +22,7 @@ public class MessagingNotification extends BaseNotification implements MainActiv
         }
         builder.setTicker("MessagingNotification");
         builder.setContentTitle("MessagingNotification");
-        builder.setContentText("MediaNotificationMediaNotificationMediaNotification");
+        builder.setContentText("MessagingNotificationMessagingNotificationMessagingNotification");
 
         builder.setStyle(new NotificationCompat.MessagingStyle("DisplayName2")
                 .addMessage("addMessageA", (int)System.currentTimeMillis(), "sender1")
@@ -41,7 +41,7 @@ public class MessagingNotification extends BaseNotification implements MainActiv
         }
         builder.setTicker("MessagingNotification");
         builder.setContentTitle("MessagingNotification");
-        builder.setContentText("MediaNotificationMediaNotificationMediaNotification");
+        builder.setContentText("MessagingNotificationMessagingNotificationMessagingNotification");
 
         builder.setStyle(new NotificationCompat.MessagingStyle("DisplayName")
                 .addMessage("addMessage1", (int)System.currentTimeMillis(), "sender1")
