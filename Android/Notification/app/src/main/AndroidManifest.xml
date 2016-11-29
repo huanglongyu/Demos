@@ -18,6 +18,10 @@
 
         <activity android:name=".ActivityA"
             android:parentActivityName=".MainActivity">
+            <!--support for 4.0.3 and below-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
         </activity>
 
         <activity android:name=".ActivityB" >
