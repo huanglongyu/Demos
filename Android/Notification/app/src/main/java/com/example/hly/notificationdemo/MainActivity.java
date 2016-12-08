@@ -3,7 +3,11 @@ package com.example.hly.notificationdemo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private NotificationCompatImpl mNotificationCompatImpl;
@@ -27,6 +31,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.process).setOnClickListener(this);
         findViewById(R.id.hands_up).setOnClickListener(this);
         findViewById(R.id.visible).setOnClickListener(this);
+
+
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_big);
+        FrameLayout layout = (FrameLayout)findViewById(R.id.expanded);
+        View view = remoteViews.apply(this,layout);
+        layout.addView(view);
     }
 
     @Override
