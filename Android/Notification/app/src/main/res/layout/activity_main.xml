@@ -13,35 +13,30 @@
 
     <Button
         android:id="@+id/normal"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="normal notification" />
 
     <Button
         android:id="@+id/bigtext"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="BigText notification" />
 
     <Button
         android:id="@+id/inbox"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="InBox notification" />
 
     <Button
         android:id="@+id/pic"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="pic notification" />
 
     <Button
         android:id="@+id/message"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="messaging notification" />
@@ -54,14 +49,12 @@
 
     <Button
         android:id="@+id/task_stack"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="task_stack notification" />
 
     <Button
         android:id="@+id/process"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="process notification" />
@@ -69,13 +62,11 @@
     <Button
         android:id="@+id/hands_up"
         android:layout_width="wrap_content"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:text="float notification" />
 
     <Button
         android:id="@+id/visible"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="visible notification" />
