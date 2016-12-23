@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_name"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeNotificationStateChanged"
+    android:accessibilityFeedbackType="feedbackAllMask"
+    android:packageNames="com.tencent.mm"
+    android:notificationTimeout="10"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="true"/>
+
+
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<accessibility-service-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:description="@string/app_name"-->
+    <!--android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeNotificationStateChanged"-->
+    <!--android:accessibilityFeedbackType="feedbackAllMask"-->
+    <!--android:packageNames="com.tencent.mm"-->
+    <!--android:notificationTimeout="10"-->
+    <!--android:accessibilityFlags="flagDefault"-->
+    <!--android:canRetrieveWindowContent="true"/>-->
+
+<!--
+    android:packageNames="com.example.hly.notificationdemo"
+
+    accessibilityEventTypes:
+        #TYPES_ALL_MASK：所有类型
+        #TYPE_VIEW_CLICKED ：单击
+        #TYPE_VIEW_LONG_CLICKED ：长按
+        #TYPE_VIEW_SELECTED ：选中
+        #TYPE_VIEW_FOCUSED ：获取焦点
+        #TYPE_VIEW_TEXT_CHANGED ：文字改变
+        #TYPE_WINDOW_STATE_CHANGED ：窗口状态改变
+        #TYPE_NOTIFICATION_STATE_CHANGED ：通知状态改变
+        #TYPE_VIEW_HOVER_ENTER
+        #TYPE_VIEW_HOVER_EXIT
+        #TYPE_TOUCH_EXPLORATION_GESTURE_START
+        #TYPE_TOUCH_EXPLORATION_GESTURE_END
+        #TYPE_WINDOW_CONTENT_CHANGED
+        #TYPE_VIEW_SCROLLED
+        #TYPE_VIEW_TEXT_SELECTION_CHANGED
+        #TYPE_ANNOUNCEMENT
+        #TYPE_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY
+        #TYPE_GESTURE_DETECTION_START
+        #TYPE_GESTURE_DETECTION_END
+        #TYPE_TOUCH_INTERACTION_START
+        #TYPE_TOUCH_INTERACTION_END
+        #TYPE_WINDOWS_CHANGED
+        -->
