@@ -3,9 +3,10 @@ package com.example.hly.luckymoneydemo;
 import android.accessibilityservice.AccessibilityService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,17 +22,29 @@ import java.util.List;
 public class HongbaoService extends AccessibilityService {
     private static final String TAG = "longyu";
 
-    private boolean luckMoneyItemClicked = false;
-    private boolean luckMoneyGetClicked = false;
+    private static final String WECHAT_NOTIFICATION_TIP = "[微信红包]";
 
-    private static final String WECHAT_NOTIFICATION_TIP = "[微信红包]";//"微信红包";
-    private static final String WECHAT_VIEW_OTHERS_CH = "领取红包";
+    private static final String WECHAT_OTHERS_HB = "领取红包";
+    private static final String WECHAT_SELF_HB = "查看红包";
+
+    private static final String WECHAT_DETAILS_EN = "Details";
+    private static final String WECHAT_DETAILS_CH = "红包详情";
+    private static final String WECHAT_BETTER_LUCK_EN = "Better luck next time!";
+    private static final String WECHAT_BETTER_LUCK_CH = "手慢了";
+    private static final String WECHAT_EXPIRES_CH = "已超过24小时";
+
+    private boolean sameHB = false;
+    private boolean haveClickHBItem = false;
 
 
     private AccessibilityNodeInfo rootNodeInfo;
-    private MyHandler mMyHandler = new MyHandler();
+    private String currentActivityName = WECHAT_LUCKMONEY_GENERAL_ACTIVITY;
+    private static final String WECHAT_LUCKMONEY_GENERAL_ACTIVITY = "LauncherUI";
+    private static final String WECHAT_LUCKMONEY_DETAIL_ACTIVITY = "LuckyMoneyDetailUI";
+    private static final String WECHAT_LUCKMONEY_RECEIVE_ACTIVITY = "LuckyMoneyReceiveUI";
 
-    private static class MyHandler extends Handler{}
+    private Rect preLastHBRect = new Rect();
+    private Rect lastHBRect;
 
     @Override
     protected void onServiceConnected() {
@@ -45,43 +58,134 @@ public class HongbaoService extends AccessibilityService {
         return super.onUnbind(intent);
     }
 
+    private String cover(int value){
+        String a;
+        switch (value) {
+            case 2048:
+                a = "TYPE_WINDOW_CONTENT_CHANGED";
+                break;
+            case 32:
+                a = "TYPE_WINDOW_STATE_CHANGED";
+                break;
+            case 64:
+                a = "TYPE_NOTIFICATION_STATE_CHANGED";
+                break;
+            default:
+                a = value + "";
+        }
+        return a;
+    }
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        goToChatScreen(event);
+//        Log.e(TAG, "onAccessibilityEvent " + cover(event.getEventType()));
+
+        setCurrentActivityName(event);
+
+        if(goToChatScreen(event)) {
+            return;
+        }
+
         clickLuckMoneyItem(event);
-        clickToGetMoney(event);
+//        clickToGetMoney(event);
+        judgeResult(event);
     }
 
     private void clickToGetMoney(AccessibilityEvent event) {
         AccessibilityNodeInfo node = findOpenButton(this.rootNodeInfo);
-        if (node != null && "android.widget.Button".equals(node.getClassName()) && !luckMoneyGetClicked) {
+        if (node != null && "android.widget.Button".equals(node.getClassName())) {
             Log.i(TAG, "clickToGetMoney: " + node);
-            luckMoneyGetClicked = true;
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             performGlobalAction(GLOBAL_ACTION_BACK);
         }
     }
 
-    private void clickLuckMoneyItem(AccessibilityEvent event) {
-        this.rootNodeInfo = getRootInActiveWindow();
-        if (rootNodeInfo == null) {
-            Log.e(TAG, "openLuckMoney , rootNodeInfo is null ,return");
+    private void judgeResult(AccessibilityEvent event) {
+
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){
             return;
         }
-        AccessibilityNodeInfo last = getTheLastNode(WECHAT_VIEW_OTHERS_CH);
-        if (last != null && !luckMoneyItemClicked) {
-            luckMoneyItemClicked = true;
-            Log.i(TAG, "clickLuckMoneyItem: " + last);
-            last.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+
+        rootNodeInfo = getRootInActiveWindow();
+        if (rootNodeInfo == null) {
+            return;
+        }
+        AccessibilityNodeInfo node = findOpenButton(this.rootNodeInfo);
+        if (node != null && "android.widget.Button".equals(node.getClassName())) {
+            Log.i(TAG, "judgeResult------------sendVoice-----------------1");
+            return;
         }
 
+        if (currentActivityName.contains(WECHAT_LUCKMONEY_DETAIL_ACTIVITY)) {
+            Log.i(TAG, "judgeResult: have picked!!!!!!!!!!!!!!!!!!!!!");
+            return;
+        }
+
+        boolean unLuck = this.hasOneOfThoseNodes(
+                WECHAT_BETTER_LUCK_CH, WECHAT_DETAILS_CH,
+                WECHAT_BETTER_LUCK_EN, WECHAT_DETAILS_EN, WECHAT_EXPIRES_CH);
+        if (unLuck &&
+                currentActivityName.contains(WECHAT_LUCKMONEY_RECEIVE_ACTIVITY)) {
+            Log.i(TAG, "judgeResult------------sendVoice-----------------2");
+        }
     }
 
-    private void goToChatScreen(AccessibilityEvent event) {
+    private void clickLuckMoneyItem(AccessibilityEvent event) {
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
+//            Log.e(TAG, "clickLuckMoneyItem return " + cover(event.getEventType()));
+            return;
+        }
+        this.rootNodeInfo = getRootInActiveWindow();
+        if (rootNodeInfo == null) {
+//            Log.e(TAG, "clickLuckMoneyItem return, rootNodeInfo is null ,return");
+            return;
+        }
+        AccessibilityNodeInfo lastHB = getTheLastNode(WECHAT_OTHERS_HB, WECHAT_SELF_HB);
+
+        if (lastHB != null
+                && currentActivityName.contains(WECHAT_LUCKMONEY_GENERAL_ACTIVITY)) {
+
+            //do not use lastHBRect.contains(preLastHBRect))
+            //cause chat screen is fragement the x coordinate may be different
+            if (lastHBRect.bottom == preLastHBRect.bottom) {
+                Log.i(TAG, "clickLuckMoneyItem: return, same location hb" + lastHBRect + " " + preLastHBRect);
+                return;
+            }
+
+            if (lastHBRect.bottom >= preLastHBRect.bottom && preLastHBRect.bottom != 0) {
+                Log.i(TAG, "clickLuckMoneyItem: return, pre location hb " + lastHBRect + " " + preLastHBRect);
+                return;
+            }
+
+            AccessibilityNodeInfo parent = lastHB.getParent();
+            if (parent != null) {
+//                if (this.signature.generateSignature(lastHB, "")) {
+                    Log.i(TAG, "clickLuckMoneyItem ACTION_CLICK=========");
+                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    haveClickHBItem = true;
+                    preLastHBRect = lastHBRect;
+//                }
+
+            } else {
+//                Log.i(TAG, "parent is null, " + currentActivityName);
+            }
+        } else {
+//            Log.i(TAG, "can not find hb!!!!!!!!!!!!, " + currentActivityName + " "
+//                    + (lastHB == null ? "null" : "not null"));
+        }
+    }
+
+    private boolean goToChatScreen(AccessibilityEvent event) {
+        boolean isReturn = false;
         switch (event.getEventType()) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
-                if (!TextUtils.isEmpty(event.getText().toString())) {
-                    String tx = event.getText().toString();
+                isReturn = true;
+                List<CharSequence> list = event.getText();
+                if (list == null) {
+                    break;
+                }
+                String tx = list.toString();
+                if (!TextUtils.isEmpty(tx)) {
                     if (tx.contains(WECHAT_NOTIFICATION_TIP)) {
                         Parcelable parcelable = event.getParcelableData();
                         if (parcelable instanceof Notification) {
@@ -95,7 +199,19 @@ public class HongbaoService extends AccessibilityService {
                     }
                 }
                 break;
+//            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
+//                List<CharSequence> list2 = event.getText();
+//                if (list2 == null) {
+//                    break;
+//                }
+//                String tip = list2.toString();
+//                if (!tip.contains(WECHAT_NOTIFICATION_TIP)) {
+//                    Log.i(TAG, "watchNotifications Not a hongbao: " + tip);
+//                    return true;
+//                }
+//                break;
         }
+        return isReturn;
     }
 
     private AccessibilityNodeInfo getTheLastNode(String... texts) {
@@ -116,10 +232,42 @@ public class HongbaoService extends AccessibilityService {
                 if (bounds.bottom > bottom) {
                     bottom = bounds.bottom;
                     lastNode = tempNode;
+                    lastHBRect = bounds;
                 }
             }
         }
         return lastNode;
+    }
+
+    private boolean hasOneOfThoseNodes(String... texts) {
+        List<AccessibilityNodeInfo> nodes;
+        for (String text : texts) {
+            if (text == null) continue;
+
+//            if (rootNodeInfo == null) continue;
+
+            nodes = this.rootNodeInfo.findAccessibilityNodeInfosByText(text);
+            if (nodes != null && !nodes.isEmpty()) return true;
+        }
+        return false;
+    }
+
+
+    private void setCurrentActivityName(AccessibilityEvent event) {
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            return;
+        }
+        try {
+            ComponentName componentName = new ComponentName(
+                    event.getPackageName().toString(),
+                    event.getClassName().toString()
+            );
+
+            getPackageManager().getActivityInfo(componentName, 0);
+            currentActivityName = componentName.flattenToShortString();
+        } catch (PackageManager.NameNotFoundException e) {
+            currentActivityName = WECHAT_LUCKMONEY_GENERAL_ACTIVITY;
+        }
     }
 
     private AccessibilityNodeInfo findOpenButton(AccessibilityNodeInfo node) {

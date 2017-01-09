@@ -4,7 +4,7 @@
     android:description="@string/app_name"
     android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeNotificationStateChanged"
     android:accessibilityFeedbackType="feedbackAllMask"
-    android:packageNames="com.tencent.mm"
+    android:packageNames="com.tencent.mm, com.tencent.mobileqq"
     android:notificationTimeout="10"
     android:accessibilityFlags="flagDefault"
     android:canRetrieveWindowContent="true"/>

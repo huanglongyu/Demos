@@ -14,6 +14,7 @@ import android.widget.Button;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+    private static final String TAG = "longyu";
     private AccessibilityManager accessibilityManager;
     private boolean isEnabled = false;
 
@@ -35,21 +36,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-       switch (v.getId()) {
-           case R.id.switchButton:
-               if (!isEnabled) {
-                   Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                   startActivity(intent);
-               }
-               break;
-       }
+        switch (v.getId()) {
+            case R.id.switchButton:
+                if (!isEnabled) {
+                    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    startActivity(intent);
+                }
+                break;
+        }
     }
 
     private boolean isServiceEnabled() {
         List<AccessibilityServiceInfo> accessibilityServices =
                 accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
         for (AccessibilityServiceInfo info : accessibilityServices) {
-            Log.i("longyu", "isServiceEnabled: :" + info.getId() + " " + getPackageName() + ".HongbaoService");
+            Log.i(TAG, "isServiceEnabled: :" + info.getId() + " " + getPackageName() + ".HongbaoService");
             if (info.getId().equals(getPackageName() + "/.HongbaoService")) {
                 return true;
             }
