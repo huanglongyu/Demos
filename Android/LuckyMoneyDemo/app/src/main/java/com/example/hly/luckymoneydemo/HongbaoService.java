@@ -13,6 +13,10 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.example.hly.QQ.QQImple;
+import com.example.hly.WX.WXImple;
+import com.example.hly.common.Utils;
+
 import java.util.List;
 
 /**
@@ -20,7 +24,10 @@ import java.util.List;
  */
 
 public class HongbaoService extends AccessibilityService {
-    private static final String TAG = "longyu";
+    private static final String TAG = "HongbaoService";
+
+    private static final String QQ_PACKAGE= "com.tencent.mobileqq";
+    private static final String WX_PACKAGE= "com.tencent.mm";
 
     private static final String WECHAT_NOTIFICATION_TIP = "[微信红包]";
 
@@ -33,10 +40,6 @@ public class HongbaoService extends AccessibilityService {
     private static final String WECHAT_BETTER_LUCK_CH = "手慢了";
     private static final String WECHAT_EXPIRES_CH = "已超过24小时";
 
-    private boolean sameHB = false;
-    private boolean haveClickHBItem = false;
-
-
     private AccessibilityNodeInfo rootNodeInfo;
     private String currentActivityName = WECHAT_LUCKMONEY_GENERAL_ACTIVITY;
     private static final String WECHAT_LUCKMONEY_GENERAL_ACTIVITY = "LauncherUI";
@@ -46,10 +49,16 @@ public class HongbaoService extends AccessibilityService {
     private Rect preLastHBRect = new Rect();
     private Rect lastHBRect;
 
+    private GrabImpl IMPL;
+    private WXImple mWXImple;
+    private QQImple mQQImple;
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         Log.i(TAG, "onServiceConnected: ");
+        mWXImple = new WXImple(HongbaoService.this);
+        mQQImple = new QQImple();
     }
 
     @Override
@@ -78,17 +87,24 @@ public class HongbaoService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-//        Log.e(TAG, "onAccessibilityEvent " + cover(event.getEventType()));
-
-        setCurrentActivityName(event);
-
-        if(goToChatScreen(event)) {
-            return;
+        String packageName = event.getPackageName().toString();
+        String name = Utils.getCurrentActivityName(event);
+        if (packageName.equals(QQ_PACKAGE)) {
+            mQQImple.doGrab(event, name);
+        } else if (packageName.equals(WX_PACKAGE)) {
+            mWXImple.doGrab(event, name);
         }
-
-        clickLuckMoneyItem(event);
-//        clickToGetMoney(event);
-        judgeResult(event);
+//        Log.e(TAG, "onAccessibilityEvent " + cover(event.getEventType()));
+//
+//        setCurrentActivityName(event);
+//
+//        if(goToChatScreen(event)) {
+//            return;
+//        }
+//
+//        clickLuckMoneyItem(event);
+////        clickToGetMoney(event);
+//        judgeResult(event);
     }
 
     private void clickToGetMoney(AccessibilityEvent event) {
@@ -162,7 +178,6 @@ public class HongbaoService extends AccessibilityService {
 //                if (this.signature.generateSignature(lastHB, "")) {
                     Log.i(TAG, "clickLuckMoneyItem ACTION_CLICK=========");
                     parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    haveClickHBItem = true;
                     preLastHBRect = lastHBRect;
 //                }
 
