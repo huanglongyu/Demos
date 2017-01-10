@@ -39,20 +39,25 @@ public class WXImple implements GrabImpl {
     private AccessibilityNodeInfo rootNodeInfo;
 
     private AccessibilityService mAccessibilityService;
-    private Rect preLastHBRect = new Rect();
+
+    private boolean isNotifyComing = false;
+    private boolean isHBItemClicked = false;
 
     public WXImple(AccessibilityService service) {
         mAccessibilityService = service;
     }
 
     @Override
-    public void doGrab(AccessibilityEvent events, String activityName) {
+    public void doGrab(final AccessibilityEvent events, String activityName) {
         if (!TextUtils.isEmpty(activityName)) {
             mCurrentActivityName = activityName;
         }
 
+        Log.i(TAG, "doGrab getContentDescription: " + events.getContentDescription());
         if (Utils.goToChatScreen(events, WECHAT_NOTIFICATION_TIP)) {
             Log.e(TAG, "goToChatScreen:");
+            isNotifyComing = true;
+            isHBItemClicked = false;
             return;
         }
 
@@ -67,21 +72,28 @@ public class WXImple implements GrabImpl {
             return;
         }
 
+        if (!isNotifyComing) {
+            return;
+        }
+
         rootNodeInfo = mAccessibilityService.getRootInActiveWindow();
         if (rootNodeInfo == null) {
             Log.e(TAG, "judgeResult rootNodeInfo is null, return");
             return;
         }
+
         AccessibilityNodeInfo node = findOpenButton(rootNodeInfo);
         if (node != null
                 && "android.widget.Button".equals(node.getClassName())
                 && mCurrentActivityName.contains(WECHAT_LUCKMONEY_RECEIVE_ACTIVITY)) {
             Log.i(TAG, "judgeResult------------sendVoice-----------------1");
+            isNotifyComing = false;
             return;
         }
 
         if (mCurrentActivityName.contains(WECHAT_LUCKMONEY_DETAIL_ACTIVITY)) {
             Log.i(TAG, "judgeResult: have picked!!!!!!!!!!!!!!!!!!!!!");
+            isNotifyComing = false;
             return;
         }
 
@@ -90,53 +102,56 @@ public class WXImple implements GrabImpl {
                 WECHAT_BETTER_LUCK_EN, WECHAT_DETAILS_EN, WECHAT_EXPIRES_CH);
         if (unLuck &&
                 mCurrentActivityName.contains(WECHAT_LUCKMONEY_RECEIVE_ACTIVITY)) {
+            isNotifyComing = false;
             Log.i(TAG, "judgeResult------------sendVoice-----------------2");
         }
     }
 
     private void clickLuckMoneyItem(AccessibilityEvent event) {
-        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED) {
-            return;
-        }
         this.rootNodeInfo = mAccessibilityService.getRootInActiveWindow();
         if (rootNodeInfo == null) {
             return;
         }
         HashMap map = Utils.getTheLastNodeAndRect(rootNodeInfo, WECHAT_OTHERS_HB, WECHAT_SELF_HB);
 
-        AccessibilityNodeInfo lastHB = null;
+        AccessibilityNodeInfo lastHB;
         Object o = map.get(Utils.KEY_LAST_NOTE);
         if (o != null) {
             lastHB = (AccessibilityNodeInfo)o;
+        } else {
+            return;
         }
 
-        Rect lastHBRect = null;
+        Rect lastHBRect;
         Object o1 = map.get(Utils.KEY_LAST_NOTE_RECT);
         if (o1 != null) {
             lastHBRect = (Rect)o1;
+        } else {
+            return;
         }
 
         if (lastHB != null
                 && mCurrentActivityName.contains(WECHAT_LUCKMONEY_GENERAL_ACTIVITY)
-                && lastHBRect != null) {
+                && lastHBRect != null
+                && !isHBItemClicked) {
 
             //do not use lastHBRect.contains(preLastHBRect))
             //cause chat screen is fragement the x coordinate may be different
-            if (lastHBRect.bottom == preLastHBRect.bottom) {
-                Log.i(TAG, "same location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
-                return;
-            }
-
-            if (lastHBRect.bottom >= preLastHBRect.bottom && preLastHBRect.bottom != 0) {
-                Log.i(TAG, "pre location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
-                return;
-            }
+//            if (lastHBRect.bottom == preLastHBRect.bottom) {
+//                Log.i(TAG, "same location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
+//                return;
+//            }
+//
+//            if (lastHBRect.bottom > preLastHBRect.bottom && preLastHBRect.bottom != 0) {
+//                Log.i(TAG, "pre location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
+//                return;
+//            }
 
             AccessibilityNodeInfo parent = lastHB.getParent();
             if (parent != null) {
-                Log.i(TAG, "clickLuckMoneyItem ACTION_CLICK=========lastHB:" + lastHBRect + " preLastHB" + preLastHBRect);
+                Log.i(TAG, "clickLuckMoneyItem ACTION_CLICK=========lastHB:" + lastHBRect);
                 parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                preLastHBRect = lastHBRect;
+                isHBItemClicked = true;
             }
         } else {
             Log.i(TAG, "can not find hb: " + lastHBRect + " " + mCurrentActivityName);
