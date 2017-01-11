@@ -4,12 +4,19 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.graphics.Rect;
+import android.os.Build;
+import android.os.IBinder;
 import android.os.Parcelable;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.android.internal.statusbar.IStatusBarService;
+
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,11 +43,64 @@ public class Utils {
         return currentActivityName;
     }
 
+    public static final void collapseStatusBar() {
+
+//        IStatusBarService a;
+//        IStatusBarService mService = IStatusBarService.Stub.asInterface(
+//                ServiceManager.getService("statusbar"));
+//
+//        try {
+//            mService.
+//        } catch (RemoteException e) {
+//            Log.e(TAG, "collapseStatusBar Exception", e);
+//            e.printStackTrace();
+//        }
+
+        Class serviceManagerClass = null;
+        try {
+            serviceManagerClass = Class.forName("android.os.ServiceManager");
+            Method getService = serviceManagerClass.getMethod("getService", String.class);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerClass, "statusbar");
+            Class statusBarClass = Class.forName(retbinder.getInterfaceDescriptor());
+
+            Object statusBarObject = statusBarClass.getClasses()[0].getMethod("asInterface", IBinder.class).invoke(null, new Object[] { retbinder });
+            Method collapse;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Log.i(TAG, "collapsePanels");
+                collapse = statusBarClass.getMethod("collapsePanels");
+            } else {
+                Log.i(TAG, "collapse");
+                collapse = statusBarClass.getMethod("collapse");
+            }
+            collapse.setAccessible(true);
+            collapse.invoke(statusBarObject);
+        } catch (Exception e) {
+            Log.e(TAG, "collapseStatusBar Exception", e);
+            e.printStackTrace();
+        }
+
+
+
+//        Log.i(TAG, "collapseStatusBar: ");
+//        try {
+//            Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
+//            Method collapse;
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                collapse = statusBarManager.getMethod("collapsePanels");
+//            } else {
+//                collapse = statusBarManager.getMethod("collapse");
+//            }
+//            collapse.invoke(mService);
+//        } catch (Exception e) {
+//            Log.e(TAG, "collapseStatusBar Exception", e);
+//            e.printStackTrace();
+//        }
+    }
+
     public static boolean goToChatScreen(AccessibilityEvent event, String tips) {
         boolean shouldReturn = false;
         switch (event.getEventType()) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
-                shouldReturn = true;
                 List<CharSequence> list = event.getText();
                 if (list == null) {
                     break;
@@ -53,6 +113,7 @@ public class Utils {
                             Notification notification = (Notification) parcelable;
                             try {
                                 notification.contentIntent.send();
+                                shouldReturn = true;
                             } catch (PendingIntent.CanceledException e) {
                                 e.printStackTrace();
                             }

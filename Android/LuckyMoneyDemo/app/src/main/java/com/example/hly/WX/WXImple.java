@@ -53,7 +53,7 @@ public class WXImple implements GrabImpl {
             mCurrentActivityName = activityName;
         }
 
-        Log.i(TAG, "doGrab getContentDescription: " + events.getContentDescription());
+//        Log.i(TAG, "doGrab getContentDescription: " + events.getContentDescription());
         if (Utils.goToChatScreen(events, WECHAT_NOTIFICATION_TIP)) {
             Log.e(TAG, "goToChatScreen:");
             isNotifyComing = true;
@@ -73,8 +73,11 @@ public class WXImple implements GrabImpl {
         }
 
         if (!isNotifyComing) {
+            Log.i(TAG, "judgeResult: isNotifyComing return");
             return;
         }
+
+//        Utils.collapseStatusBar();
 
         rootNodeInfo = mAccessibilityService.getRootInActiveWindow();
         if (rootNodeInfo == null) {
@@ -87,6 +90,7 @@ public class WXImple implements GrabImpl {
                 && "android.widget.Button".equals(node.getClassName())
                 && mCurrentActivityName.contains(WECHAT_LUCKMONEY_RECEIVE_ACTIVITY)) {
             Log.i(TAG, "judgeResult------------sendVoice-----------------1");
+
             isNotifyComing = false;
             return;
         }
@@ -105,6 +109,7 @@ public class WXImple implements GrabImpl {
             isNotifyComing = false;
             Log.i(TAG, "judgeResult------------sendVoice-----------------2");
         }
+        Log.i(TAG, "judgeResult: unLuck:" + unLuck + " mCurrentActivityName:" + mCurrentActivityName + " node:" + (node == null ? " is null" : " is not null"));
     }
 
     private void clickLuckMoneyItem(AccessibilityEvent event) {
@@ -133,19 +138,8 @@ public class WXImple implements GrabImpl {
         if (lastHB != null
                 && mCurrentActivityName.contains(WECHAT_LUCKMONEY_GENERAL_ACTIVITY)
                 && lastHBRect != null
-                && !isHBItemClicked) {
-
-            //do not use lastHBRect.contains(preLastHBRect))
-            //cause chat screen is fragement the x coordinate may be different
-//            if (lastHBRect.bottom == preLastHBRect.bottom) {
-//                Log.i(TAG, "same location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
-//                return;
-//            }
-//
-//            if (lastHBRect.bottom > preLastHBRect.bottom && preLastHBRect.bottom != 0) {
-//                Log.i(TAG, "pre location hb return, lastHB:" + lastHBRect + " preHB:" + preLastHBRect);
-//                return;
-//            }
+                && !isHBItemClicked
+                && isNotifyComing) {
 
             AccessibilityNodeInfo parent = lastHB.getParent();
             if (parent != null) {
@@ -164,6 +158,7 @@ public class WXImple implements GrabImpl {
 
         //非layout元素
         if (node.getChildCount() == 0) {
+//            Log.i(TAG, "findOpenButton: " + node.getClassName() + " " + node.getContentDescription() + " " + node.getText());
             if ("android.widget.Button".equals(node.getClassName())) {
                 return node;
             } else {
