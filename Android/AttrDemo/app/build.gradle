@@ -16,8 +16,30 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        "flavors1" {}
+        "flavors2" {}
+        "flavors3" {}
     }
 }
+
+// customize the dist folder
+android.applicationVariants.all { variant ->
+        println "variant:" + variant.name + " " + variant.buildType.name + " " + variant.productFlavors.name
+//        def buildType = apk.name =~ /(?i)debug/ ? "debug" : "release"
+//        def parentFolder = apk.splitFolder.getPath() + File.separator + buildType + File.separator
+//        def fileName = "ludashi_" + variant.versionName + "_" + apk.dirName.replaceFirst(/\/.*$/, "") + ".apk"
+//        println "fileName:" + fileName + " " + parentFolder
+}
+
+println "app build.gradle name :" + project.name + " " + rootProject.name
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

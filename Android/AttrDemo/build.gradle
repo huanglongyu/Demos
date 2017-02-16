@@ -1,4 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'demo.gradle'
 
 buildscript {
     repositories {
@@ -21,3 +22,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+println "top build.gradle name :" + project.name + " " + rootProject.name
