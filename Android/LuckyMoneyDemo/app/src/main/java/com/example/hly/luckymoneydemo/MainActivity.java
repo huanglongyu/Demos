@@ -1,60 +1,70 @@
 package com.example.hly.luckymoneydemo;
 
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 
-import java.util.List;
+import com.example.hly.common.Utils;
 
 public class MainActivity extends Activity implements View.OnClickListener {
     private static final String TAG = "longyu";
-    private AccessibilityManager accessibilityManager;
-    private boolean isEnabled = false;
+    private boolean isAccessibilityService = false;
+    private boolean isNotifyEnable = false;
+
+    private Button bt, bt2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        accessibilityManager = (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
-        Button bt = (Button) findViewById(R.id.switchButton);
-        bt.setOnClickListener(this);
 
-        isEnabled = isServiceEnabled();
-        if (isEnabled) {
-            bt.setText("opened");
-        } else {
-            bt.setText("click to open");
-        }
+        bt = (Button) findViewById(R.id.switchButton);
+        bt.setOnClickListener(this);
+        bt2 = (Button) findViewById(R.id.notify_switchButton);
+        bt2.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateButtonState();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.switchButton:
-                if (!isEnabled) {
+                if (!isAccessibilityService) {
                     Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.notify_switchButton:
+                if (!isNotifyEnable) {
+                    Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
                     startActivity(intent);
                 }
                 break;
         }
     }
 
-    private boolean isServiceEnabled() {
-        List<AccessibilityServiceInfo> accessibilityServices =
-                accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
-        for (AccessibilityServiceInfo info : accessibilityServices) {
-            Log.i(TAG, "isServiceEnabled: :" + info.getId() + " " + getPackageName() + ".HongbaoService");
-            if (info.getId().equals(getPackageName() + "/.HongbaoService")) {
-                return true;
-            }
+    private void updateButtonState() {
+        isAccessibilityService = Utils.isAccessibilityServiceEnabled(this);
+        if (isAccessibilityService) {
+            bt.setText("AccessibilityService opened");
+        } else {
+            bt.setText("click to open AccessibilityService");
         }
-        return false;
+        isNotifyEnable = Utils.isNotifyServiceEnable(this);
+        if (isNotifyEnable) {
+            bt2.setText("notify opened");
+        } else {
+            bt2.setText("click to open notify");
+        }
     }
+
+
 }

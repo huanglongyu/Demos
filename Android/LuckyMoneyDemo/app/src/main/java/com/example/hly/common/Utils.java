@@ -1,17 +1,21 @@
 package com.example.hly.common;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.android.internal.statusbar.IStatusBarService;
@@ -166,5 +170,36 @@ public class Utils {
         map.put(KEY_LAST_NOTE, lastNode);
         map.put(KEY_LAST_NOTE_RECT, lastHBRect);
         return map;
+    }
+
+    public static boolean isNotifyServiceEnable(Context context) {
+        String pkgName = context.getPackageName();
+        final String flat = Settings.Secure.getString(context.getContentResolver(), "enabled_notification_listeners");
+        if (!TextUtils.isEmpty(flat)) {
+            final String[] names = flat.split(":");
+            for (int i = 0; i < names.length; i++) {
+                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAccessibilityServiceEnabled(Context context) {
+        AccessibilityManager accessibilityManager =
+                (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        List<AccessibilityServiceInfo> accessibilityServices =
+                accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+        for (AccessibilityServiceInfo info : accessibilityServices) {
+            Log.i(TAG, "isAccessibilityServiceEnabled: :" + info.getId() + " " + context.getPackageName() + ".HongbaoService");
+            if (info.getId().equals(context.getPackageName() + "/.HongbaoService")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

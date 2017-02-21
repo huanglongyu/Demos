@@ -8,4 +8,8 @@ import android.view.accessibility.AccessibilityEvent;
 
 public interface GrabImpl {
     void doGrab(AccessibilityEvent events, String activityName);
+
+    interface Notification {
+        void doGrab(android.app.Notification notification);
+    }
 }
