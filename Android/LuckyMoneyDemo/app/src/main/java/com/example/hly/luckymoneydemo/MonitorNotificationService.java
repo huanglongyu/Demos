@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Process;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
@@ -37,69 +38,77 @@ public class MonitorNotificationService extends NotificationListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate: ");
         sp = getSharedPreferences(fileName, Context.MODE_PRIVATE);
         mNotificationImpl = new NotificationImpl(this);
 
         boolean had_Destroied = sp.getBoolean(KEY_HAD_DESTROIED, true);
         if (had_Destroied) {
-            Log.i(TAG, "onCreate: opended");
             sp.edit().putBoolean(KEY_HAD_DESTROIED, false).commit();
         }
-//        getContentResolver().registerContentObserver(Settings.Secure.CONTENT_URI, true, cob);
-//        cob.onChange(true);
     }
 
-    private ContentObserver cob = new ContentObserver(new Handler()) {
-        @Override
+    @Override
+    public void onListenerConnected() {
+        super.onListenerConnected();
+        Log.i(TAG, "onListenerConnected");
+    }
 
-        public boolean deliverSelfNotifications() {
-            return super.deliverSelfNotifications();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            boolean isEnable = Utils.isNotifyServiceEnable(MonitorNotificationService.this);
-            Log.i(TAG, "service is enabled: " + isEnable);
-        }
-    };
+    @Override
+    public void onListenerHintsChanged(int hints) {
+        super.onListenerHintsChanged(hints);
+        Log.i(TAG, "onListenerHintsChanged : " + hints);
+    }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: closed");
         super.onDestroy();
         sp.edit().putBoolean(KEY_HAD_DESTROIED, true).commit();
-//        getContentResolver().unregisterContentObserver(cob);
     }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        Log.i(TAG, "onNotificationPosted:" + Process.myUid() + " " + Process.myPid());
         String packageName = sbn.getPackageName();
         Notification notification = sbn.getNotification();
 
+
         if (notification == null || TextUtils.isEmpty(packageName)) {
+            Log.e(TAG, "notification:" + notification + " return");
             return;
         }
 
         CharSequence ticker = notification.tickerText;
 
         if (ticker == null) {
+            Log.e(TAG, "ticker:" + ticker + " return");
             return;
         }
 
+        boolean isTrigger = false;
         String tikerString = ticker.toString();
         if ((packageName.equals(QQ_PACKAGE) && tikerString.contains(QQ_NOTIFICATION_TIP)) ||
                 (packageName.equals(WX_PACKAGE) && tikerString.contains(WECHAT_NOTIFICATION_TIP))) {
-
-            if (mNotificationImpl != null) {
-                Log.i(TAG, "doGrab");
-                mNotificationImpl.doGrab(notification);
+            Log.i(TAG, "going to doGrab : " + isTrigger + " " + mNotificationImpl);
+            //andorid 7.0 not support
+            if (Build.VERSION.SDK_INT >= 24) {
+                isTrigger = true;
+            } else {
+                if (Utils.isLuckMoney(notification)) {
+                    isTrigger = true;
+                } else {
+                    isTrigger = false;
+                }
             }
+        }
+
+        if (mNotificationImpl != null && isTrigger) {
+            Log.i(TAG, "doGrab");
+            mNotificationImpl.doGrab(notification);
         }
     }
 
     @Override
-    public void onNotificationRemoved(StatusBarNotification sbn) {}
-
+    public void onNotificationRemoved(StatusBarNotification sbn) {
+        Log.i(TAG, "onNotificationRemoved");
+    }
 }
