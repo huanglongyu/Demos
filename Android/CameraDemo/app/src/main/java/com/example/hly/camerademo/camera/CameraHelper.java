@@ -106,9 +106,7 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
         }
 
         @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     };
 
     @Override
@@ -124,6 +122,30 @@ public class CameraHelper extends CameraBase implements IPreviewCallback, Handle
     @Override
     protected void setCaputreInfo(int type, String name) {
         mCapture.setCaputreInfo(type, name);
+    }
+
+    @Override
+    protected void toggleFlashLight() {
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (registed) {
+            sm.unregisterListener(myAccelerometerListener);
+            registed = false;
+        }
+        mHandler.removeMessages(RE_TRY);
+        mCamera.cancelAutoFocus();
+        mFoucsed = false;
+        sensorOnce = false;
+        Log.i(TAG, "toggleFlashLight: " + parameters.getFlashMode());
+        if (parameters.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        } else {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        }
+        mCamera.setParameters(parameters);
+        if (!registed) {
+            sm.registerListener(myAccelerometerListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+            registed = true;
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
     private static final String TAG = MainActivity.TAG;
     private CameraBase action;
     private View mCaptureView;
+    private View mFlash;
     private View mBack;
     private FrameLayout previewLayout;
     private boolean hasCameraPermisson = false;
@@ -61,6 +62,9 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
     private void initViews() {
         mCaptureView = findViewById(R.id.capture);
         mCaptureView.setOnClickListener(this);
+
+        mFlash = findViewById(R.id.flashLight);
+        mFlash.setOnClickListener(this);
 
         mBack = findViewById(R.id.back);
         mBack.setOnClickListener(this);
@@ -120,6 +124,9 @@ public class CameraActivity extends Activity implements View.OnClickListener, IC
                 break;
             case R.id.back:
                 finish();
+                break;
+            case R.id.flashLight:
+                action.toggleFlashLight();
                 break;
         }
     }

@@ -22,6 +22,7 @@ public abstract class CameraBase {
     protected abstract void doReleaseCamera();
     protected abstract void setActionCallback(ICaptureCallback c);
     protected abstract void setCaputreInfo(int type, String name);
+    protected abstract void toggleFlashLight();
 
     /** Check if this device has a camera */
     protected boolean checkCameraHardware(Context context) {

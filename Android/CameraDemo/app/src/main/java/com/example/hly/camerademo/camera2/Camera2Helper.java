@@ -195,4 +195,9 @@ public class Camera2Helper extends CameraBase implements IPreviewCallback{
     protected void setCaputreInfo(int type, String name) {
 
     }
+
+    @Override
+    protected void toggleFlashLight() {
+
+    }
 }

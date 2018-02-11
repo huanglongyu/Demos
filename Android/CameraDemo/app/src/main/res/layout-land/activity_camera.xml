@@ -36,6 +36,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_camera_alt_black_24dp"/>
 
+    <ImageView
+        android:id="@+id/flashLight"
+        android:background="@drawable/flash"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/capture"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
     <TextView
         android:id="@+id/capture_tips"
         android:layout_marginTop="10dp"
