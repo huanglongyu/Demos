@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFAABBCC"
+    android:orientation="vertical"
+    tools:context="com.hly.keyboard.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World!" />
+
+        <com.hly.keyboard.KeyBoardEditText
+            android:id="@+id/keyboardEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="KeyBoardEditText!" />
+
+        <com.hly.keyboard.connection.KInputView
+            android:id="@+id/kinput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="123123" />
+
+        <Button
+            android:id="@+id/showdialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show dialog" />
+
+        <Button
+            android:id="@+id/inputbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="input normal" />
+
+        <Button
+            android:id="@+id/inputbutton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="input connection" />
+
+        <com.hly.keyboard.KeyBoardEditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:text="KeyBoardEditText!" />
+        <!--<com.hly.keyboard.MyKeyBoradView-->
+        <!--android:id="@+id/keyboardview"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom" />-->
+
+        <!--<com.hly.keyboard.tencen.MyKeyboardWindow-->
+        <!--android:id="@+id/tencen"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"></com.hly.keyboard.tencen.MyKeyboardWindow>-->
+    </LinearLayout>
+</ScrollView>

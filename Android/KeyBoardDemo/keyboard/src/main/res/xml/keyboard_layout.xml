@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="3px"
+    android:keyHeight="45dp"
+    android:keyWidth="10%p"
+    android:verticalGap="3px">
+    <!--KeyBoard标签下的keyWidth="10%p"表示下面的每个键宽度占parent宽度的10%，xxxGap属性是键与键之间的水平和垂直间隔-->
+
+    <Row>
+        <Key
+            android:codes="113"
+            android:keyEdgeFlags="left"
+            android:keyLabel="q" />
+        <Key
+            android:codes="119"
+            android:keyLabel="w" />
+        <Key
+            android:codes="101"
+            android:keyLabel="e" />
+        <Key
+            android:codes="114"
+            android:keyLabel="r" />
+        <Key
+            android:codes="116"
+            android:keyLabel="t" />
+        <Key
+            android:codes="121"
+            android:keyLabel="y" />
+        <Key
+            android:codes="117"
+            android:keyLabel="u" />
+        <Key
+            android:codes="105"
+            android:keyLabel="i" />
+        <Key
+            android:codes="111"
+            android:keyLabel="o" />
+        <Key
+            android:codes="112"
+            android:keyEdgeFlags="right"
+            android:keyLabel="p" />
+    </Row>
+    <!--codes属性就是该Key对应的ASCII码（其实也可以不一定得是ASCII码，反正后面会在监听事件中返回给你这个codes值，你想怎么处理都行），keyLabel属性就是该Key显示在键盘上的string，还有个keyIcon属性是该Key显示在键盘上的drawable-->
+
+    <Row>
+        <Key
+            android:codes="97"
+            android:horizontalGap="5%p"
+            android:keyEdgeFlags="left"
+            android:keyLabel="a" />
+        <Key
+            android:codes="115"
+            android:keyLabel="s" />
+        <Key
+            android:codes="100"
+            android:keyLabel="d" />
+        <Key
+            android:codes="102"
+            android:keyLabel="f" />
+        <Key
+            android:codes="103"
+            android:keyLabel="g" />
+        <Key
+            android:codes="104"
+            android:keyLabel="h" />
+        <Key
+            android:codes="106"
+            android:keyLabel="j" />
+        <Key
+            android:codes="107"
+            android:keyLabel="k" />
+        <Key
+            android:codes="108"
+            android:keyEdgeFlags="right"
+            android:keyLabel="l" />
+    </Row>
+    <!--Key标签下的horizontalGap属性表示距离parent的距离-->
+
+    <Row>
+        <Key
+            android:codes="-1"
+            android:keyEdgeFlags="left"
+            android:keyLabel="Shift"
+            android:keyWidth="15dp" />
+        <Key
+            android:codes="122"
+            android:keyLabel="z" />
+        <Key
+            android:codes="120"
+            android:keyLabel="x" />
+        <Key
+            android:codes="99"
+            android:keyLabel="c" />
+        <Key
+            android:codes="118"
+            android:keyLabel="v" />
+        <Key
+            android:codes="98"
+            android:keyLabel="b" />
+        <Key
+            android:codes="110"
+            android:keyLabel="n" />
+        <Key
+            android:codes="109"
+            android:keyLabel="m" />
+        <Key
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyEdgeFlags="right"
+            android:keyLabel="Delete"
+            android:keyWidth="15dp" />
+    </Row>
+    <!--Key标签下的keyWidth属性会覆盖parent中赋的值，isRepeatable属性表示是长按时是否重复输入-->
+
+    <Row android:rowEdgeFlags="bottom">
+        <Key
+            android:codes="-2"
+            android:keyLabel="12#"
+            android:keyWidth="20%p" />
+        <Key
+            android:codes="44"
+            android:keyLabel=","
+            android:keyWidth="15%p" />
+        <Key
+            android:codes="32"
+            android:isRepeatable="true"
+            android:keyLabel="Space"
+            android:keyWidth="30%p" />
+        <Key
+            android:codes="46"
+            android:keyLabel="."
+            android:keyWidth="15%p" />
+        <Key
+            android:codes="-3"
+            android:keyEdgeFlags="right"
+            android:keyLabel="完成"
+            android:keyWidth="20%p" />
+    </Row>
+</Keyboard>

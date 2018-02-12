@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/fullScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="full screen" />
+
+    <Button
+        android:id="@+id/dialog"
+        android:layout_below="@id/fullScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog"/>
+
+    <Button
+        android:id="@+id/dialogActivity"
+        android:layout_below="@id/dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog Activity"/>
+
+    <Button
+        android:id="@+id/dialogFragment"
+        android:layout_below="@id/dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog Fragment"/>
+
+    <com.hly.keyboard.KeyBoardEditText
+        android:hint="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

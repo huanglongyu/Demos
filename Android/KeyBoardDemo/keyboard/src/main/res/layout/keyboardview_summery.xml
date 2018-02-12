@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboardview_summery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#999"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:keyBackground="@color/colorAccent"
+        android:keyTextColor="#333"
+        android:shadowColor="#00000000"
+        android:keyPreviewHeight="100dp"
+        android:keyPreviewLayout="@layout/key_pressed_preview"/>
+
+     <!--background是整个键盘View的背景，设置了键的xxxgap后，中间的缝隙就会是这个背景色-->
+     <!--keyBackground是每个键的背景-->
+     <!--keyTextColor是每个键中字符的textColor-->
+     <!--shadowColor是每个键中字符的shadow，请设置为全透明！！！-->
+     <!--keyPreviewHeight是预览框的高度！！！-->
+     <!--keyPreviewLayout是预览框对应的布局，跟布局必须是TextView！！！-->
+</merge>

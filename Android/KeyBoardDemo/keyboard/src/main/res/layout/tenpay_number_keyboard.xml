@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/keyboard_height"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <Button
+            android:id="@+id/tenpay_keyboard_1"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_2"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_3"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/ol"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <Button
+            android:id="@+id/tenpay_keyboard_4"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_5"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_6"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/ol"
+            android:text="6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <Button
+            android:id="@+id/tenpay_keyboard_7"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_8"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oh"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_9"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/ol"
+            android:text="9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0">
+
+        <Button
+            android:id="@+id/tenpay_keyboard_x"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/tenpay_keybtn_bottom"
+            android:text=""
+            android:textSize="26.0dip" />
+
+        <Button
+            android:id="@+id/tenpay_keyboard_0"
+            style="@style/TenpayKeyboardText"
+            android:background="@drawable/oi"
+            android:text="0" />
+
+        <ImageButton
+            android:id="@+id/tenpay_keyboard_d"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:background="@drawable/oj"
+            android:contentDescription="descripiton"
+            android:src="@drawable/ok" />
+    </LinearLayout>
+</LinearLayout>
